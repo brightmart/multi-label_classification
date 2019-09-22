@@ -18,8 +18,9 @@ a value(y) either 0 or 1 for each label in label space. According to wiki:
 
     Multi-label classification is the problem of finding a model that maps inputs x to binary vectors y (assigning a value of 0 or 1 for each element (label) in y).
 
-Transform Multi-label Classification as Sentence Pair Task 任务转化：将多标签分类转换为句子对任务
+Transform Multi-label Classification as Sentence Pair Task 
 --------------------------------------------------------------------
+### 任务转化：将多标签分类转换为句子对任务
 
 It is normal to get a baseline by trying use a single classification model to predict the labels for each input string. 
 
@@ -31,21 +32,27 @@ but fail to use more information and training example is not enough.
 
 By cast to sentence pair task, it is easy to use more information including label information, instance information, key words from each label.
 
-Together with generating more training data, use more information and external knowledge 产生更多训练数据、结合更多信息和额外的知识
+Together with generating more training data, use more information and external knowledge
 --------------------------------------------------------------------
-Let me format it. it is like this for sentence pair task: <sentence_1, sentence_2, label>
+###  产生更多训练数据、结合更多信息和额外的知识
 
-for sentence_1, let it be original input string. then it be: <input_sentence, sentence_2, label(0,1)>.
+Let's talk about how to use additional information and generate more data. 
 
-what is sentence_2? it is another input sentence, 1) can be chinese label string; or 2) an sentence which can represent a label. you can
+Sentence pair task is like this: <sentence_1, sentence_2, label>. for sentence_1, it come from original input string. 
 
-randomly pick a sentence from a specific label to represent label, you can also manual give an description to a label to represent this label;
+Then it be: <input_sentence, sentence_2, label(0,1)>. so where is sentence_2 come from? it is another input sentence. it can be come from: 
+    
+          1) chinese label string, or
+          
+          2) an sentence which can represent a label. you can randomly pick a sentence from a specific label to represent label, 
+             
+             you can also manual give an description to a label to represent this label;
+    
+          3) you can learn the keywords from the label and put keywords together to repsenent the label. 
 
-or 3) you can learn the keywords from the label and put keywords together to repsenent the label. 
+In a words, there are many way to generate sentence_2 to do sentence pair task. and as a result, we generate more than 
 
-in a words, there are many way to generate sentence_2 to do sentence pair task. and as a result, we generate more than 1 million training instances 
-
-for sentence pair task by using only 10k labeled instance. 
+1 million training instances for sentence pair task by using only 30k labeled instance. 
 
 直接的多标签分类去预测，由于设法直接从输入的文本去影射标签，没有使用额外的信息，训练数据也有限，效果比较差。
 
@@ -77,13 +84,13 @@ Performance 效果对比
 |4 |#3 + bert_www_ext_law |bert_wwwm_ext基础上的领域预训练| 70.7 | 
 |5 |#4 + RoBERTa-zh-domain | 结合RoBERTa和wwm的大规模领域预训练| 72.1 |  
 |6 |#5 + RoBERTa-zh-Large-domain |24层的RoBERTa的预训练| 73.0| 
-|7 |#6 + Ensemble| 使用3个模型概率求平均 & 候选项召回基础上做预测加速 | 75.5|  
+|7 |#6 + Ensemble| 使用3个模型概率求平均 & 候选项召回并预测加速 | 75.5|  
  
 Additional information for pre-train RoBERTa chinese models, check: <a href="https://github.com/brightmart/roberta_zh">Roberta_zh</a>
 
 Task Description 任务介绍 
 --------------------------------------------------------------------
-##### About Task 任务是什么？
+### About Task 任务是什么？
 The purpose of this task is to extract important fact from description of legal case,
  
 and map description of case to case elements according to system designed by experts in the field.
@@ -100,7 +107,7 @@ multiple or zero elements may exist in a sentence.
 
 本任务共涉及三个领域，包括婚姻家庭、劳动争议、借款合同等领域。
 
-##### Examples of Data 数据介绍
+### Examples of Data 数据介绍
 
 本任务所使用的数据集主要来自于“中国裁判文书网”公开的法律文书，每条训练数据由一份法律文书的案情描述片段构成，其中每个句子都被标记了对应的类别标签
 
@@ -121,7 +128,7 @@ multiple or zero elements may exist in a sentence.
 
 Generate Training Data 生成训练数据
 --------------------------------------------------------------------
-#### 标签下的代表性样本的产生
+### 标签下的代表性样本的产生
 我们首先选取每个标签下一定数量样本，如随机的选取5个样本，来代表这个标签；并且由于我们知道这个标签对应的中文名称，所以，对于任何一个标签，我们都构造了6个句子来代表这个标签，
 
 记为集合{representation_set}. 需要注意的是，为了使得样本更有代表性，在随机选取样本过程中，我们优先选择哪些只有一个标签的样本作为我们的代表性的样本。
@@ -138,7 +145,7 @@ Generate Training Data 生成训练数据
 
 原始样本： {"labels": ["DV1", "DV4", "DV2"],"sentence": "本院认为，依据双方离婚时的协议约定，原告已按尚抚养十年一性支付孩子抚养费22210.00元，可确认原告每月支付孩子抚养费为200.00元。"}
 
-#### 正样本的构造
+### 正样本的构造
 
 我们需要构造句子对任务：<sentence_1, sentence_2, label(0,1)>
 
@@ -156,7 +163,7 @@ Generate Training Data 生成训练数据
 
 通过这个形式，我们将正样本扩大了6倍；我们可以通过标签下采样更多的例子，以及使用标签下统计得到的关键词的组合，来进一步扩大正样本的集合。
 
-#### 负样本的构造
+### 负样本的构造
 
 对于一个标签集合，如婚姻家庭下有20个标签，那么对于一个句子，只要没有被打上标签的，就是负样本。我们也构造了一个标签下的可能的所有样本的集合外加中文标签，并通过随机样本的方式来得到需要的样本。
 
@@ -165,7 +172,7 @@ Generate Training Data 生成训练数据
 它被打上了三个标签["DV1", "DV4", "DV2"]，那么其他标签["DV3","DV5",...,"DV20"]，都可以用来构造负样本。对应DV3,我们选择4+1即5个样本。3即从DV3下随机的找出三个样本，1即中文标签做为样本。
 
 
-#### 总样本量和正负样本分布 Training data and Its distribution
+### 总样本量和正负样本分布 Training data and Its distribution
 
 由于正样本量扩大了至少6倍，负样本扩大了20倍左右，最终我们从原始的1万个样本中产生了100多万的数据。当然为了样本分布受控，我们也对负样本有部分下采样。
 
@@ -196,16 +203,22 @@ We are not doing few shot learning. however we try to get maximum performance fo
 
 And also try to use information and knowledge,whether come from task or outside the task, as much as possible, to boost the performance.
 
+Download Data 下载数据
+--------------------------------------------------------------------
+点击这里<a href="https://storage.googleapis.com/roberta_zh/roberta_model/data_all.zip">下载</a>数据，并解压缩到zuo目录下。这样你就有了一个新的包含所有需要的数据的目录./zuo/data_all
+
 Training 训练模型 
 --------------------------------------------------------------------
+Run Command to Train the model：
 
-export BERT_BASE_DIR=./RoBERTa_zh_Large
-export TEXT_DIR=./zuo/data_all/train_data
-nohup  python3 run_classifier.py   --task_name=sentence_pair   --do_train=true   --do_eval=true   --data_dir=$TEXT_DIR  \
---vocab_file=$BERT_BASE_DIR/vocab.txt   --bert_config_file=$BERT_BASE_DIR/bert_config_big.json   \
---init_checkpoint=$BERT_BASE_DIR/roberta_zh_large_model.ckpt --max_seq_length=256 --train_batch_size=128  \
---learning_rate=1e-5   --num_train_epochs=3 --output_dir=zuo/model_files/roberta-zh-large_law  &
-  
+    export BERT_BASE_DIR=./RoBERTa_zh_Large
+    export TEXT_DIR=./zuo/data_all/train_data
+    
+    nohup python3 run_classifier.py   --task_name=sentence_pair   --do_train=true   --do_eval=true   --data_dir=$TEXT_DIR  \
+     --vocab_file=$BERT_BASE_DIR/vocab.txt   --bert_config_file=$BERT_BASE_DIR/bert_config_big.json   \
+     --init_checkpoint=$BERT_BASE_DIR/roberta_zh_large_model.ckpt --max_seq_length=256 --train_batch_size=128  \
+     --learning_rate=1e-5   --num_train_epochs=3 --output_dir=zuo/model_files/roberta-zh-large_law  &
+      
     如果你从现有的模型基础上训练，指定一下BERT_BASE_DIR的路径，并确保bert_config_file和init_checkpoint两个参数的值能对应到相应的文件上。
     这里假设你下载了roberta的模型并放在本项目的这个RoBERTa_zh_Large目录下。
 
@@ -214,17 +227,17 @@ Inference and its acceleration 预测加速
 --------------------------------------------------------------------
 训练完成后，运行命令来进行预测 Run Command to Train Model：
 
-python3 -u main.py
+    python3 -u main.py
 
     需要注意的是，你需要确保相应的目录有训练好的模型，见zuo/run_classifier_predict_online.py，特别注意这两个参数要能对应上：init_checkpoint和bert_config_file
 
-#### 预测阶段句子对任务的构建  Construct Sentence Pair During Inference
+### 预测阶段句子对任务的构建  Construct Sentence Pair During Inference
 
 虽然训练阶段使用了很多信息和知识来训练，但是预测阶段我们只采用<原始输入的句子,候选标签对应的中文标签>来构造句子对任务。我们认为样本下的标签虽然能
 
 代表标签，但中文标签具有最好的代表性，预测效果也好一些。
 
-#### 预测阶段加速 Accelerate Inference Time
+### 预测阶段加速 Accelerate Inference Time
 
 由于采用了sentence pair任务即句子对形式，对于一个输入，有20个标签，每个标签都需要预测，那么总共需要预测20次，这会导致预测时间过长。
 
