@@ -3,8 +3,7 @@ Transform multi-label classification as sentence pair task &
 
 Together with generating more training data, use more information and external knowledge
 
-
-Multi-label Classification 多标签分类
+Introduction of Multi-label Classification 多标签分类介绍
 --------------------------------------------------------------------
 Multi-label Classification is a classification problem where multiple labels may be assigned to each instance.
 
@@ -32,7 +31,7 @@ but fail to use more information and training example is not enough.
 
 By cast to sentence pair task, it is easy to use more information including label information, instance information, key words from each label.
 
-Together with generating more training data, use more information and external knowledge
+With generating more training data and Information
 --------------------------------------------------------------------
 ###  产生更多训练数据、结合更多信息和额外的知识
 
@@ -41,14 +40,14 @@ Let's talk about how to use additional information and generate more data.
 Sentence pair task is like this: <sentence_1, sentence_2, label>. for sentence_1, it come from original input string. 
 
 Then it be: <input_sentence, sentence_2, label(0,1)>. so where is sentence_2 come from? it is another input sentence. it can be come from: 
+        
+      1) chinese label string, or
+      
+      2) an sentence which can represent a label. you can randomly pick a sentence from a specific label to represent label, 
+         
+         you can also manual give an description to a label to represent this label;
     
-          1) chinese label string, or
-          
-          2) an sentence which can represent a label. you can randomly pick a sentence from a specific label to represent label, 
-             
-             you can also manual give an description to a label to represent this label;
-    
-          3) you can learn the keywords from the label and put keywords together to repsenent the label. 
+      3) you can learn the keywords from the label and put keywords together to repsenent the label. 
 
 In a words, there are many way to generate sentence_2 to do sentence pair task. and as a result, we generate more than 
 
@@ -65,17 +64,17 @@ In a words, there are many way to generate sentence_2 to do sentence pair task. 
 
 Procedure 流程
 --------------------------------------------------------------------
-1) Transform multi-label classification to sentence pair task with random instance from label --->
-
-2) Additional information: add label information, which is chinese; or keys words from label, or export knowledge  --->
-
-3) Additional domain knowledge: large scale domain pre-training
+    1) Transform multi-label classification to sentence pair task with random instance from label --->
+    
+    2) Additional information: add label information, which is chinese; or keys words from label, or export knowledge  --->
+    
+    3) Additional domain knowledge: large scale domain pre-training
 
 
 Performance 效果对比
 --------------------------------------------------------------------
 
-| No. 序列| Model | 描述 | Online 线上 |
+| No. 序列| Model | 描述 Description | Online 线上 |
 | :-------| :------- | :------- | :---------: | 
 |0 | Multi-label Classification(TextCNN)|多标签分类 | 61 | 
 |1 | Multi-label Classification(Bert) |多标签分类| 64.9 | 
@@ -159,7 +158,7 @@ Generate Training Data 生成训练数据
     
     <"本院认为，依据双方离婚时的协议约定，原告已按尚抚养十年一性支付孩子抚养费22210.00元，可确认原告每月支付孩子抚养费为200.00元。", “综合全案证据及庭审调查，本院确认以下法律事实：××××年××月××日，原告林某和被告赵某甲办理结婚登记手续，婚后于××××年××月××日生育婚生女儿赵某乙。", 1>
     
-    ....---
+    ....
 
 通过这个形式，我们将正样本扩大了6倍；我们可以通过标签下采样更多的例子，以及使用标签下统计得到的关键词的组合，来进一步扩大正样本的集合。
 
@@ -172,7 +171,7 @@ Generate Training Data 生成训练数据
 它被打上了三个标签["DV1", "DV4", "DV2"]，那么其他标签["DV3","DV5",...,"DV20"]，都可以用来构造负样本。对应DV3,我们选择4+1即5个样本。3即从DV3下随机的找出三个样本，1即中文标签做为样本。
 
 
-### 总样本量和正负样本分布 Training data and Its distribution
+### 正负样本分布 Training data and Its distribution
 
 由于正样本量扩大了至少6倍，负样本扩大了20倍左右，最终我们从原始的1万个样本中产生了100多万的数据。当然为了样本分布受控，我们也对负样本有部分下采样。
 
@@ -182,11 +181,12 @@ Generate Training Data 生成训练数据
 
     train: 
        count_pos: 261001 ;count_neg: 1011322 ;pert of pos: 0.20513737470752316
+    
     dev: 
        count_pos: 13863 ;count_neg: 16121 ;pert of pos: 0.4623465848452508
 
 
-check this script: 
+生成训练数据的命令 Run command to generate training data : 
 
     python3 -u zuo/generate_training_data
 
@@ -229,9 +229,11 @@ Inference and its acceleration 预测加速
 
     python3 -u main.py
 
-    需要注意的是，你需要确保相应的目录有训练好的模型，见zuo/run_classifier_predict_online.py，特别注意这两个参数要能对应上：init_checkpoint和bert_config_file
+    需要注意的是，你需要确保相应的目录有训练好的模型，见zuo/run_classifier_predict_online.py，特别注意这两个参数要能对应上：
+    
+      init_checkpoint和bert_config_file
 
-### 预测阶段句子对任务的构建  Construct Sentence Pair During Inference
+### 句子对任务的构建  Construct Sentence Pair
 
 虽然训练阶段使用了很多信息和知识来训练，但是预测阶段我们只采用<原始输入的句子,候选标签对应的中文标签>来构造句子对任务。我们认为样本下的标签虽然能
 
@@ -261,3 +263,5 @@ Reference
 1、<a href="https://arxiv.org/pdf/1810.04805.pdf">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</a>
 
 2、<a href="https://github.com/brightmart/roberta_zh">RoBERTa中文预训练模型：Roberta_zh</a>
+
+3、<a href="https://arxiv.org/pdf/1906.08101.pdf">Pre-Training with Whole Word Masking for Chinese BERT</a>
