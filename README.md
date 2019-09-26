@@ -3,7 +3,7 @@ Transform multi-label classification as sentence pair task &
 
 Together with generating more training data, use more information and external knowledge
 
-Introduction of Multi-label Classification 多标签分类介绍
+Introduction 多标签分类介绍
 --------------------------------------------------------------------
 Multi-label Classification is a classification problem where multiple labels may be assigned to each instance.
 
@@ -31,7 +31,7 @@ but fail to use more information and training example is not enough.
 
 By cast to sentence pair task, it is easy to use more information including label information, instance information, key words from each label.
 
-With generating more training data and Information
+Generating more training data and Information
 --------------------------------------------------------------------
 ###  产生更多训练数据、结合更多信息和额外的知识
 
@@ -105,6 +105,10 @@ multiple or zero elements may exist in a sentence.
 具体地，给定司法文书中的相关段落，系统需针对文书中每个句子进行判断，识别其中的关键案情要素。
 
 本任务共涉及三个领域，包括婚姻家庭、劳动争议、借款合同等领域。
+
+Check this for more details on this task:<a href="http://cail.cipsc.org.cn/instruction.html">中国法研杯_CAIL2019(要素识别赛道)</a>
+
+This is the 2rd/188 solution for this task. 
 
 ### Examples of Data 数据介绍
 
@@ -251,11 +255,23 @@ Inference and its acceleration 预测加速
 
 对于响应速度要求不是特别严格的时候，我们也可以通过训练层数比较少的句子对模型来作为快速召回模块。
 
-Unfinished Work 未包含的工作
+Multi-label classification directly with Bert 使用Bert直接做多标签分类
+--------------------------------------------------------------------
+Check this  <a href="https://github.com/brightmart/text_classification">3.BERT</a>, You can find code here:
+
+    train_bert_multi-label.py
+
+Unfinished Work 未完成的工作
 --------------------------------------------------------------------
 利用标签间的关系，构造更多数据和更难的任务。
 
 由于标签之间具有共现关系或排斥关系等，通过标签关系来生成更多数据，也是未来可以研究的一个方向。
+
+项目贡献者，还包括：
+--------------------------------------------------------------------
+<a href="https://github.com/skyhawk1990">skyhawk1990</a>
+
+<a href="#">yucong</a>
 
 
 Reference
