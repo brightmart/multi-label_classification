@@ -5,7 +5,7 @@ Together with generating more training data, use more information and external k
 
 *** UPDATE *** 
 
-Going to releasing Chinese version of Pre-trained Model ALBERT at <a href="https://github.com/brightmart/albert_zh">albert_zh</a>, State Of The Art performance with 30% few parameters.
+Going to releasing Chinese version of Pre-trained Model ALBERT at <a href="https://github.com/brightmart/albert_zh">albert_zh</a>, State Of The Art performance on benchmark with 30% fewer parameters than BERT_large and others.
 
 Introduction 多标签分类介绍
 --------------------------------------------------------------------
