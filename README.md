@@ -3,6 +3,10 @@ Transform multi-label classification as sentence pair task &
 
 Together with generating more training data, use more information and external knowledge
 
+*** UPDATE *** 
+
+Going to releasing Chinese version of Pre-trained Model ALBERT at <a href="https://github.com/brightmart/albert_zh">albert_zh</a>, State Of The Art performance with 30% few parameters.
+
 Introduction 多标签分类介绍
 --------------------------------------------------------------------
 Multi-label Classification is a classification problem where multiple labels may be assigned to each instance.
@@ -271,7 +275,7 @@ Unfinished Work 未完成的工作
 --------------------------------------------------------------------
 <a href="https://github.com/skyhawk1990">skyhawk1990</a>
 
-<a href="#">yucong</a>
+<a href="https://github.com/YC-wind">YC-wind</a>
 
 
 Reference
