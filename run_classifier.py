@@ -21,9 +21,9 @@ from __future__ import print_function
 import collections
 import csv
 import os
-import bert.modeling
+import bert.modeling as modeling
 import bert.optimization_finetuning as optimization
-import bert.tokenization
+import bert.tokenization as tokenization
 import tensorflow as tf
 # from loss import bi_tempered_logistic_loss
 
