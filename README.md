@@ -7,6 +7,9 @@ Together with generating more training data, use more information and external k
 
 Going to releasing Chinese version of Pre-trained Model ALBERT at <a href="https://github.com/brightmart/albert_zh">albert_zh</a>, State Of The Art performance on benchmark with 30% fewer parameters than BERT_large and others.
 
+一键运行10个数据集、9个基线模型、不同任务上模型效果的详细对比，见<a href="https://github.com/CLUEbenchmark/CLUE">中文任务基准测评 CLUE benchmark</a>
+
+
 Introduction 多标签分类介绍
 --------------------------------------------------------------------
 Multi-label Classification is a classification problem where multiple labels may be assigned to each instance.
